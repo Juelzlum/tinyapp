@@ -7,6 +7,9 @@ app.set("view engine", "ejs");
 app.use(cookieParser())// populates req.cookies
 app.use(express.urlencoded({extended: false})) //populataes req.body
 
+
+
+
 //data base 
 const user = {
   abc: {
@@ -36,12 +39,16 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+// app.get("/urls.json", (req, res) => {
+//   res.json(urlDatabase);
+// });
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
+
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new",);
 });
 
 app.get("/urls", (req, res) => {
@@ -49,14 +56,10 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
-});
-
 
 app.get("/urls/:id", (req, res) => {
   const id = req.params.id
-  // console.log('id:', id)
+  console.log('id:', id)
   const longUrl = urlDatabase[id]
   // console.log('longUrl', longUrl)
   const templateVars = {id: id, longUrl: longUrl}
@@ -66,22 +69,37 @@ app.get("/urls/:id", (req, res) => {
 
 
 
-function generateRandomString() { }
+
+const generateRandomString = () => {
+  const alphaNumerical = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += alphaNumerical.charAt(Math.floor(Math.random() * alphaNumerical.length));
+  }
+  return result;
+};
 
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
-  const userID = req.session["userID"];
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = { longURL, userID };
-  res.redirect(`/urls/${shortURL}`);
+  urlDatabase[shortURL] = longURL;
+  res.redirect("/urls");
 });
 
-app.post("/urls/:shortURL/delete", (req,res) => {
-  console.log(urlDatabase[req.params.shortURL])
-  delete urlDatabase[req.params.shortURL]
+app.post("/urls/:id/delete", (req,res) => {
+  const id = req.params.id
+  console.log('id2:', id)
+  delete urlDatabase[id]
+  //console.log(urlDatabase[req.params.id])
   res.redirect("/urls");
 })
 
+app.post("/urls/:id", (req, res) => {
+const longUrl = req.body.longURL
+console.log('longUrl:', longUrl)
+res.redirect('/url')
+
+})
 app.post('/login' ,(req,res) => {
   const username = req.body.username
   const password = req.body.password
