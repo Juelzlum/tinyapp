@@ -12,17 +12,17 @@
   </head>
 
   <body>
-    <%- include("./partials/_header") -%>
+    <%- include("./partials/_header") %>
     <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longUrl %></h5>
         <p class="card-text">
-          Short URL ID: <a href="#"<%= id %></a>
-        </p>
+          Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
+        </p> 
       </div>
       <div class="card-footer text-muted"></div>
-      <form action='/urls/:id<%= id %>' method="post">
+      <form action='/urls/<%=id%>' method="GET">
         <h3>Edit</h3>
         <label form="name"> New URL : </label>
         <input type="text" name="longUrl" id="longUrl" placeholder="<%= longUrl %>">
