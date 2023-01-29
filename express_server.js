@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs");
 const password = "1234"; // found in the req.body object
 const hashedPassword = bcrypt.hashSync(password, 10);
 
+const { generateRandomString, findEmail, findUserId, findPassword, urlsForUser} = require("./function")
 
 app.set("view engine", "ejs");
 
@@ -35,13 +36,14 @@ const users = {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-// app.get("/", (req, res) => {
-//   res.send("Welcome To TinyApp")
-// });
 
-// app.get("/hello", (req, res) => {
-//   res.send("<html><body>Hello <b>World</b></body></html>\n");
-// });
+app.get("/", (req, res) => {
+  res.send("Welcome To TinyApp")
+});
+
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
+});
 
 app.get("/login", (req, res) => {
     const templateVars = {
@@ -61,15 +63,15 @@ app.get("/register", (req, res) => {
 
 
 
-const urlsForUser = function(id, urlDatabase) {
-  const userUrls = {};
-  for (const shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      userUrls[shortURL] = urlDatabase[shortURL];
-    }
-  }
-  return userUrls;
-};
+// const urlsForUser = function(id, urlDatabase) {
+//   const userUrls = {};
+//   for (const shortURL in urlDatabase) {
+//     if (urlDatabase[shortURL].userID === id) {
+//       userUrls[shortURL] = urlDatabase[shortURL];
+//     }
+//   }
+//   return userUrls;
+// };
 
 app.get("/urls", (req, res) => {
   let templateVars = {
@@ -114,20 +116,20 @@ app.get("/urls/:shortURL", (req, res) => {
     };
     res.render("urls_show", templateVars);
   } else {
-    res.status(404).send("Your short URL that was input does not match with a long URL at this time.");
+    res.status(404).send("Your short URL does not match with a long URL");
   }
 });
 
 
 
-const generateRandomString = () => {
-  const alphaNumerical = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let result = '';
-  for (let i = 0; i < 6; i++) {
-    result += alphaNumerical.charAt(Math.floor(Math.random() * alphaNumerical.length));
-  }
-  return result;
-};
+// const generateRandomString = () => {
+//   const alphaNumerical = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//   let result = '';
+//   for (let i = 0; i < 6; i++) {
+//     result += alphaNumerical.charAt(Math.floor(Math.random() * alphaNumerical.length));
+//   }
+//   return result;
+// };
 
 
 //post
@@ -166,22 +168,22 @@ app.post("/urls/:id", (req, res) => {
   }
 });
   
-const findEmail = function(email, userDatabase) {
-  for (const user in users) {
-    if (users[user].email === email) {
-      return true;
-    }
-  }
-  return false;
-};
+// const findEmail = function(email, userDatabase) {
+//   for (const user in users) {
+//     if (users[user].email === email) {
+//       return true;
+//     }
+//   }
+//   return false;
+// };
 
-const findUserId = (email, db) => {
-  for (const user in db) {
-    if (db[user].email === email) {
-      return db[user].id;
-    }
-  }
-};
+// const findUserId = (email, db) => {
+//   for (const user in db) {
+//     if (db[user].email === email) {
+//       return db[user].id;
+//     }
+//   }
+// };
 
 app.post("/login", (req, res) => {
   const email = req.body.email;

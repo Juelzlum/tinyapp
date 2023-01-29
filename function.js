@@ -15,16 +15,6 @@ const findUserId = (email, db) => {
   }
 };
 
-//check to see if password exist
-const findPassword = (email, db) => {
-  for (let key in db) {
-    if (email === db[key].email) {
-      return db[key].password;
-    }
-  }
-  return undefined;
-};
-
 
 const generateRandomString = () => {
   const alphaNumerical = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -49,6 +39,5 @@ module.exports = {
   generateRandomString,
   findEmail,
   findUserId,
-  findPassword,
   urlsForUser
 };
