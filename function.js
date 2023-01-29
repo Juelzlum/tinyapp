@@ -35,9 +35,20 @@ const urlsForUser = function(id, urlDatabase) {
   return userUrls;
 };
 
+const emailHasUser = function(email, userDatabase) {
+  for (const user in userDatabase) {
+    if (userDatabase[user].email === email) {
+      return true;
+    }
+  }
+  return false;
+};
+
+
 module.exports = {
   generateRandomString,
   findEmail,
   findUserId,
-  urlsForUser
+  urlsForUser,
+  emailHasUser
 };
