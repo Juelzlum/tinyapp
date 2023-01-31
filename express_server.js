@@ -122,7 +122,9 @@ app.post("/urls", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log(urlDatabase[req.params.shortURL].userID);
-  if (urlDatabase[req.params.shortURL].userID === req.session["userID"]) {
+  if (urlDatabase[req.params.shortURL].userID === req.session["user_id"]) {
+    console.log(req.session["user_id"])
+     console.log(urlDatabase[req.params.shortURL])
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
