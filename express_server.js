@@ -38,18 +38,16 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Welcome To TinyApp");
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+  if(req.session.user_id){
+    res.redirect("/urls")
+  }
+    res.redirect("/login")
 });
 
 app.get("/login", (req, res) => {
   const templateVars = {
     user: users[req.session.user_id]
   };
-  console.log('logvars', templateVars);
   res.render("urls_login", templateVars);
 });
 
@@ -57,7 +55,7 @@ app.get("/register", (req, res) => {
   const templateVars = {
     user: users[req.session.user_id]
   };
-  console.log('retvars', templateVars);
+  // console.log('retvars', templateVars);
   res.render("urls_registration", templateVars);
 });
 
