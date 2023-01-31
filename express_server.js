@@ -82,7 +82,8 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/new", (req, res) => { //creating new urls 
   const templateVars = {
-    user: users[req.session.user_id]
+    user: users[req.session.user_id],
+    url: urlDatabase
   };
   if (!req.session.user_id) {
     res.redirect("/login");
