@@ -96,9 +96,9 @@ app.get("/urls/:shortURL", (req, res) => {
     let templateVars = {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
-      urlUserID: urlDatabase[req.params.shortURL].userID,
-      user: users[req.session.user_id],
+      user: users[req.session.user_id]
     };
+    console.log(templateVars)
     res.render("urls_show", templateVars);
   } else {
     res.status(404).send("Your short URL does not match with a long URL");
@@ -112,7 +112,7 @@ app.post("/urls", (req, res) => {
     const shortURL = generateRandomString();
     urlDatabase[shortURL] = {
       longURL: req.body.longURL,
-      userID: req.session.user_id,
+      userID: users[req.session.user_id],
     };
     res.redirect(`/urls/${shortURL}`);
   } else {
@@ -132,13 +132,14 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   }
 });
 
-app.post("/urls/:id", (req, res) => {
+app.post("/urls/:id", (req, res) => { //for editing
   const userID = req.session.user_id;
-  const userUrls = urlsForUser(userID, urlDatabase);
-  if (Object.keys(userUrls).includes(req.params.id)) {
-    const shortURL = req.params.id;
-    urlDatabase[shortURL].longURL = req.body.newURL;
+  if (userID) { 
+    const shortURL = req.params.id
+    const updateNew =req.body.longURL
+    urlDatabase[shortURL].longURL= updateNew
     res.redirect('/urls');
+ 
   } else {
     res.status(401).send("You are authorize to edit this short URL ");
   }
