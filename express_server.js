@@ -57,7 +57,7 @@ app.get("/register", (req, res) => {
 
 app.get("/urls", (req, res) => {
   if(!req.session.user_id) {
-    return res.status(401).send("You must be logged in to access this page.")
+    return res.status(401).send('You must be logged in to access this page.')
   }
   let templateVars = {
     urls: urlsForUser(req.session.user_id, urlDatabase),
@@ -98,7 +98,7 @@ app.get("/urls/:shortURL", (req, res) => {
       longURL: urlDatabase[req.params.shortURL].longURL,
       user: users[req.session.user_id]
     };
-    console.log(templateVars)
+
     res.render("urls_show", templateVars);
   } else {
     res.status(404).send("Your short URL does not match with a long URL");
@@ -107,12 +107,13 @@ app.get("/urls/:shortURL", (req, res) => {
 
 
 //post
+
 app.post("/urls", (req, res) => {
   if (req.session.user_id) {
     const shortURL = generateRandomString();
     urlDatabase[shortURL] = {
       longURL: req.body.longURL,
-      userID: users[req.session.user_id],
+      userID: req.session.user_id,
     };
     res.redirect(`/urls/${shortURL}`);
   } else {
@@ -121,10 +122,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  console.log(urlDatabase[req.params.shortURL].userID);
   if (urlDatabase[req.params.shortURL].userID === req.session["user_id"]) {
-    console.log(req.session["user_id"])
-     console.log(urlDatabase[req.params.shortURL])
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
