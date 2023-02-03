@@ -33,15 +33,12 @@ const users = {
     password: hashedPassword
   },
 };
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
 
 app.get("/", (req, res) => {
   if(req.session.user_id){
     res.redirect("/urls")
   }
-    res.redirect("/login")
+    res.redirect("/register")
 });
 
 app.get("/login", (req, res) => {
@@ -55,11 +52,13 @@ app.get("/register", (req, res) => {
   const templateVars = {
     user: users[req.session.user_id]
   };
-  // console.log('retvars', templateVars);
   res.render("urls_registration", templateVars);
 });
 
 app.get("/urls", (req, res) => {
+  if(!req.session.user_id) {
+    return res.status(401).send("You must be logged in to access this page.")
+  }
   let templateVars = {
     urls: urlsForUser(req.session.user_id, urlDatabase),
     user: users[req.session["userID"]]
@@ -117,7 +116,7 @@ app.post("/urls", (req, res) => {
     };
     res.redirect(`/urls/${shortURL}`);
   } else {
-    res.status(401).send("You must be logged in to create short URLs.");
+    return res.status(401).send("You must be logged in to create short URLs.");
   }
 });
 
@@ -129,7 +128,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
-    res.status(403).send("Not permitted");
+    return res.status(403).send("Not permitted");
   }
 });
 
@@ -184,4 +183,8 @@ app.post("/register", (req, res) => {
 app.post("/logout", (req, res) => {
   req.session = null;
   res.redirect("/urls");
+});
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
 });
