@@ -61,7 +61,7 @@ app.get("/urls", (req, res) => {
   }
   let templateVars = {
     urls: urlsForUser(req.session.user_id, urlDatabase),
-    user: users[req.session["userID"]]
+    user: users[req.session.user_id]
   };
   res.render("urls_index", templateVars);
 });
@@ -122,7 +122,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.session["user_id"]) {
+  if (urlDatabase[req.params.shortURL].userID === req.session.user_id) {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
