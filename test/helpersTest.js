@@ -15,7 +15,7 @@ const testUsers = {
   }
 };
 
-describe('fineEmail', function() {
+describe('findEmail', function() {
   it('should return a user with valid email', function() {
     const user = findEmail("user@example.com", testUsers)
     const expectedUserID = "userRandomID";
